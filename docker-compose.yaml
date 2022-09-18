@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: pgrafana.grafana
+    hostname: pgrafana.grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - pgrafana.network
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - VIRTUAL_HOST=pgrafana.grafana
+      - NETWORK_ACCESS=internal
+      - VIRTUAL_PORT=3000
+    labels:
+      org.label-schema.group: "pgrafana"
+
+
+networks:
+  pgrafana.network:
+
+volumes:
+  grafana-data:
