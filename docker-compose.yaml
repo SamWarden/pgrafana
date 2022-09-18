@@ -39,6 +39,24 @@ services:
     labels:
       org.label-schema.group: "pgrafana"
 
+  promtail:
+    image: grafana/promtail:2.6.1
+    container_name: pgrafana.promtail
+    hostname: pgrafana.promtail
+    restart: unless-stopped
+    expose:
+      - "9080"
+    volumes:
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - promtail-data:/var/lib/promtail/positions
+      - ./promtail/config.yaml:/etc/promtail/config.yaml:ro
+    command: -config.file=/etc/promtail/config.yaml
+    networks:
+      - pgrafana.network
+    labels:
+      org.label-schema.group: "pgrafana"
+
   emitter:
     image: pgrafana-emitter
     hostname: pgrafana.emitter
@@ -60,3 +78,4 @@ networks:
 volumes:
   grafana-data:
   loki-data:
+  promtail-data:
