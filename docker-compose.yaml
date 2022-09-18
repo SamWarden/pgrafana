@@ -23,6 +23,21 @@ services:
     labels:
       org.label-schema.group: "pgrafana"
 
+  loki:
+    image: grafana/loki:2.2.1
+    container_name: pgrafana.loki
+    hostname: pgrafana.loki
+    expose:
+      - "3100"
+    volumes:
+      - ./loki/config.yaml:/etc/loki/config.yaml
+      - loki-data:/tmp/loki/
+    command: -config.file=/etc/loki/config.yaml
+    restart: unless-stopped
+    networks:
+      - pgrafana.network
+    labels:
+      org.label-schema.group: "pgrafana"
 
   emitter:
     image: pgrafana-emitter
@@ -45,3 +60,4 @@ networks:
 
 volumes:
   grafana-data:
+  loki-data:
