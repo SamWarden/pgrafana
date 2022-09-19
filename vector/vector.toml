@@ -1,0 +1,23 @@
+[sources.docker]
+type = "docker_logs"
+docker_host = "/var/run/docker.sock"
+include_containers = [ "pgrafana.emitter" ]
+; include_labels = [ "com.example.vendor=Timber Inc." ]
+; include_images = [ "httpd" ]
+
+[transforms.json]
+type = "json_parser"
+inputs = ["docker"]
+target_field = "json"
+
+[sinks.console]
+type = "console"
+inputs = ["json"]
+encoding.codec = "json"
+
+[sinks.loki_sync_id]
+type = "loki"
+inputs = ["json"]
+encoding = "json"
+labels.event = "log"
+endpoint = "http://pgrafana.loki:3100"
