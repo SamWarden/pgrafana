@@ -39,6 +39,14 @@ services:
     labels:
       org.label-schema.group: "pgrafana"
 
+  vector:
+    image: timberio/vector:0.24.1-alpine
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./vector/vector.toml:/etc/vector/vector.toml:ro
+    expose:
+      - "8383"
+
   emitter:
     image: pgrafana-emitter
     hostname: pgrafana.emitter
